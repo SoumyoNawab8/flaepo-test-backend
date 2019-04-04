@@ -1,0 +1,42 @@
+body{
+    background-color: black;
+   
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+.logo{
+    background:black;
+
+}
+.logo span{
+    color:#007bff !important;
+    font-size: 1.4em;
+    
+}
+a:hover{
+    color:#8bc3ff !important;
+    transition: 3s;
+}
+a{
+    text-decoration: none !important;
+}
+
+.home-text{
+    user-select: none;
+    width: 18em;
+    position: relative;
+    left: 825px;
+    top: 4px;
+    font-size: 22px;
+    transition: none 0s ease 0s;
+    color: rgb(255, 255, 255);
+}
+
+.register-form,.login{
+    user-select: none;
+    margin-top:1em;
+    width:26em;
+}
