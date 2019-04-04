@@ -1,0 +1,36 @@
+<div class="container">
+    <h1>Profile</h1>
+        <div id="name"></div>
+        <div id="email"></div>
+        <div id="age"></div><br/>
+        <button type="button" id="logoff" class="btn btn-danger">Log Out</button>
+    
+</div>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script>
+
+    $.ajax({
+    headers: {
+        'Authorization': 'Bearer {{{token}}}',
+    },
+    url: '/users',
+    statusCode: {
+      401:function() { location.href="/login"},
+    },
+}).done(function(data,err){
+    console.log(data)
+    $('#name').text("Name: "+data.name);
+    $('#email').text("Email: "+data.email);
+    $('#age').text("Age: "+data.age);
+  });
+
+   
+
+    $("#logoff").click(function(){
+        location.href="/login";
+});
+</script>

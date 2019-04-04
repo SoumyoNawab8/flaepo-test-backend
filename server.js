@@ -5,7 +5,7 @@ const bodyParser=require('body-parser');
 const path=require('path');
 const passport = require('passport');
 const exphbs=require('express-handlebars');
-
+var store = require('store')
 
 db.authenticate()
 .then(()=>console.log('Databse Connected'))
@@ -43,6 +43,21 @@ app.get('/login',(req,res)=>{
         title:"Login | LUCID DREAMS"});
 })
 
+app.get('/profile',(req,res)=>{
+    res.render('profile',{
+    title:"Profile",
+    token:store.get('token')
+    })
+})
+
+app.get('/logout',(req,res)=>{
+    store.remove('token');
+
+    // setTimeout(function(res){
+    //     res.redirect('/login');
+    // },1000);
+   
+})
 
 app.use('/users',require('./routes/api/users'));
 

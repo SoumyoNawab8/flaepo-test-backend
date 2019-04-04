@@ -1,58 +1,45 @@
 const express=require('express');
 const router=express.Router();
 const db=require('../../config/dBase');
+const jwtkey=require('../../config/jwtKey');
 const User=require('../../models/User');
 const jwt = require('jsonwebtoken');
-
-function ValidateFields(fields){
-  let missingfields=[];
-  Object.keys(fields).map(key=>{
-    if(fields[key].length==0){
-      missingfields.push(key+" can't be empty!");
-    }
-  })
-
-  if(missingfields.length>0){
-    return missingfields;
-  }
-  else{
-    return true;
-  }
-}
-
-
+const passport = require('passport');
+const ValidateFields=require('../../helpers/validateFields');
+var store = require('store');
 
 router.post('/login',(req,res,next)=>{
-  console.log(req.body)
-  if(req.body.email==undefined && req.body.password==undefined){
-    res.send('Email and password is required!')
-  }
+  let passFields=ValidateFields(req.body);
+  if(passFields==true){
+  passport.authenticate('local-login',{session:false},(info,admin,err)=>{
+    console.log()
+    if(info==null){
+       res.json({status:false,message:'Invalid user credentials!'});
+    }
+    else{
 
-  if(req.body.email.length!=0 && req.body.password.length!=0){
-    User.findOne({where:{email:req.body.email,password:req.body.password}}).then(result=>{
-      if(result!=null){
-            jwt.sign({id:result.id,name:result.name}, 'falepo_secret', {
-      expiresIn: 3600
-    }, (err, token) => {
-      res.json({
-        Success: true,
-        Token: 'Bearer ' + token
-      });});
-
-      }
-      else{
-        console.log(result);
-      }
-    }).catch(err=>console.log(err))
-
+            var token = jwt.sign({info},jwtkey.key,{expiresIn: 5000000});
+            store.set('token',token)
+            // res.json({
+            //     success: true,
+            //     message: "Successfull",
+            //     admin: admin,
+            //     token: token
+            // });
+            res.redirect('/profile');
+        
+    }
+    })(req,res,next);
   }
   else{
-
-    res.send("Email and password can't be empty!")
+    let errString="";
+    passFields.map(item=>{
+      passFields.length==0?errString=item:errString+="<br/> "+item;
+    })
+    res.send(errString)
   }
 })
     
-// router.get('/users')
 
 router.post('/register',function(req,res){
   let passFields=ValidateFields(req.body);

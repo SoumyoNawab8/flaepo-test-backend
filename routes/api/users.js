@@ -5,7 +5,9 @@ const passport=require('passport');
 
 router.use('/auth',require('./authentication'));
 
-router.get('/',passport.authenticate('jwt',{session: false}),(req,res)=>{
+router.use(passport.authenticate('jwt',{session: false}));
+
+router.get('/',(req,res)=>{
 
     res.json(req.user);
 })
